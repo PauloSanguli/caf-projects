@@ -20,7 +20,7 @@
   <p class="page-lede">Preencha o formulário abaixo para submeter o seu projecto web. Certifique-se de que os ficheiros seguem as normas exigidas.</p>
 </section>
 
-<form class="panel form-card" method="post" enctype="multipart/form-data" novalidate>
+<form class="panel form-card" method="post" enctype="multipart/form-data" novalidate id="form-submeter" data-loading-overlay="loading-submeter">
   {% csrf_token %}
 
   {% if form.non_field_errors %}
@@ -125,8 +125,18 @@
     </button>
   </div>
 </form>
+
+<div id="loading-submeter" class="page-loading" data-page-loading hidden aria-hidden="true">
+  <div class="page-loading__backdrop" aria-hidden="true"></div>
+  <div class="page-loading__box" role="status" aria-live="polite">
+    <div class="page-loading__spinner" aria-hidden="true"></div>
+    <p class="page-loading__text">A enviar a submissão…</p>
+    <p class="page-loading__hint">Aguarde enquanto os ficheiros são enviados.</p>
+  </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
   <script src="{% static 'submissions/js/form-dropzone.js' %}" defer></script>
+  <script src="{% static 'submissions/js/page-loading.js' %}" defer></script>
 {% endblock %}

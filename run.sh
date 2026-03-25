@@ -37,7 +37,7 @@
 
 # 2) túnel Serveo que reconecta sempre que cair
 while true; do
-  ssh -R frota:80:localhost:8001 serveo.net
+  ssh -R caf:80:localhost:8001 serveo.net
   echo "Serveo caiu, a reconectar em 5s..."
   sleep 5
 done

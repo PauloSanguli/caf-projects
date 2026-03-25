@@ -32,11 +32,13 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "caf.serveousercontent.com",
     "caf.serveusercontent.com",
+    "caf-projects.onrender.com"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://caf.serveousercontent.com",
     "https://caf.serveusercontent.com",
+    "https://caf-projects.onrender.com",
 ]
 
 
