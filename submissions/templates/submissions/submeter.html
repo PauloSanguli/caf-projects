@@ -1,0 +1,76 @@
+{% extends "submissions/base.html" %}
+
+{% block title %}Submeter projecto · CAF{% endblock %}
+
+{% block content %}
+<section class="panel hero">
+  <h1>Submissão de projecto</h1>
+  <p class="lede">Preencha os dados do grupo e carregue o ZIP do site e o PDF da ata. Campos marcados com * são obrigatórios.</p>
+</section>
+
+<form class="panel form-card" method="post" enctype="multipart/form-data" novalidate>
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+    <div class="form-errors">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <fieldset class="fieldset">
+    <legend>Identificação</legend>
+    <div class="field">
+      <label for="id_nome_projecto">Nome do projecto <span class="hint">(opcional)</span></label>
+      {{ form.nome_projecto }}
+      {% if form.nome_projecto.errors %}<p class="errorlist">{{ form.nome_projecto.errors }}</p>{% endif %}
+    </div>
+    <div class="field">
+      <label for="id_nome_responsavel">Estudante responsável *</label>
+      {{ form.nome_responsavel }}
+      {% if form.nome_responsavel.errors %}<p class="errorlist">{{ form.nome_responsavel.errors }}</p>{% endif %}
+    </div>
+    <div class="field">
+      <label for="id_membros_grupo">Membros do grupo *</label>
+      {{ form.membros_grupo }}
+      {% if form.membros_grupo.errors %}<p class="errorlist">{{ form.membros_grupo.errors }}</p>{% endif %}
+      <p class="field-help">Separe por vírgulas ou coloque um nome por linha.</p>
+    </div>
+  </fieldset>
+
+  <fieldset class="fieldset">
+    <legend>Turma e local</legend>
+    <div class="field">
+      <label for="id_classe">{{ form.classe.label }} *</label>
+      {{ form.classe }}
+      {% if form.classe.errors %}<p class="errorlist">{{ form.classe.errors }}</p>{% endif %}
+    </div>
+    <div class="field">
+      <label for="id_turma">{{ form.turma.label }} *</label>
+      {{ form.turma }}
+      {% if form.turma.errors %}<p class="errorlist">{{ form.turma.errors }}</p>{% endif %}
+    </div>
+    <div class="field">
+      <label for="id_sala">Sala *</label>
+      {{ form.sala }}
+      {% if form.sala.errors %}<p class="errorlist">{{ form.sala.errors }}</p>{% endif %}
+    </div>
+  </fieldset>
+
+  <fieldset class="fieldset">
+    <legend>Ficheiros</legend>
+    <div class="field">
+      <label for="id_ficheiro_projecto">Projecto (.zip) *</label>
+      {{ form.ficheiro_projecto }}
+      {% if form.ficheiro_projecto.errors %}<p class="errorlist">{{ form.ficheiro_projecto.errors }}</p>{% endif %}
+      <p class="field-help">HTML, CSS e JavaScript opcional, compactados num único ficheiro ZIP.</p>
+    </div>
+    <div class="field">
+      <label for="id_ficheiro_ata">Ata em PDF *</label>
+      {{ form.ficheiro_ata }}
+      {% if form.ficheiro_ata.errors %}<p class="errorlist">{{ form.ficheiro_ata.errors }}</p>{% endif %}
+    </div>
+  </fieldset>
+
+  <div class="form-actions">
+    <button type="submit" class="btn primary">Enviar submissão</button>
+  </div>
+</form>
+{% endblock %}

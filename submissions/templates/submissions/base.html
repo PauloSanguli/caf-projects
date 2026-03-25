@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Submissão de projectos{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Karla:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'submissions/css/app.css' %}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="{% url 'submeter_projecto' %}">CAF · Projectos</a>
+      <nav class="nav">
+        <a href="{% url 'submeter_projecto' %}">Submeter</a>
+        <a href="{% url 'lista_projectos_professor' %}">Área do professor</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap main">
+    {% if messages %}
+      <ul class="messages" role="status">
+        {% for message in messages %}
+          <li class="msg msg-{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <span>Ficheiros guardados localmente em <code>media/</code></span>
+    </div>
+  </footer>
+</body>
+</html>

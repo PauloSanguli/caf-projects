@@ -1,0 +1,84 @@
+{% extends "submissions/base.html" %}
+
+{% block title %}Projectos submetidos · Professor{% endblock %}
+
+{% block content %}
+<section class="panel hero">
+  <h1>Projectos submetidos</h1>
+  <p class="lede">Filtre por classe e turma. Cada linha permite descarregar o ZIP do projecto e o PDF da ata.</p>
+</section>
+
+<form class="panel filters" method="get" action="">
+  <div class="filter-row">
+    <label class="filter">
+      <span>Classe</span>
+      <select name="classe">
+        <option value="">Todas</option>
+        {% for value, label in classes %}
+          <option value="{{ value }}" {% if filtro_classe == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label class="filter">
+      <span>Turma</span>
+      <select name="turma">
+        <option value="">Todas</option>
+        {% for value, label in turmas %}
+          <option value="{{ value }}" {% if filtro_turma == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <button type="submit" class="btn secondary">Aplicar filtros</button>
+    <a class="btn ghost" href="{% url 'lista_projectos_professor' %}">Limpar</a>
+  </div>
+  <p class="filter-meta">{{ total }} projecto{{ total|pluralize }} encontrado{{ total|pluralize }}.</p>
+</form>
+
+{% if projectos %}
+  <div class="table-wrap panel">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Projecto</th>
+          <th>Responsável</th>
+          <th>Membros</th>
+          <th>Classe / Turma</th>
+          <th>Sala</th>
+          <th>Data</th>
+          <th>Ficheiros</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in projectos %}
+          <tr>
+            <td data-label="Projecto">{{ p.nome_projecto|default:"—" }}</td>
+            <td data-label="Responsável">{{ p.nome_responsavel }}</td>
+            <td data-label="Membros">
+              <ul class="member-list">
+                {% for m in p.membros_lista %}
+                  <li>{{ m }}</li>
+                {% empty %}
+                  <li>—</li>
+                {% endfor %}
+              </ul>
+            </td>
+            <td data-label="Classe">{{ p.get_classe_display }} · {{ p.turma }}</td>
+            <td data-label="Sala">{{ p.sala }}</td>
+            <td data-label="Data">{{ p.data_submissao|date:"d/m/Y H:i" }}</td>
+            <td data-label="Ficheiros" class="actions">
+              {% if p.ficheiro_projecto %}
+                <a class="btn small" href="{{ p.ficheiro_projecto.url }}" download>ZIP</a>
+              {% endif %}
+              {% if p.ficheiro_ata %}
+                <a class="btn small secondary" href="{{ p.ficheiro_ata.url }}" download>PDF</a>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <p class="panel empty">Nenhuma submissão corresponde aos filtros seleccionados.</p>
+{% endif %}
+{% endblock %}
