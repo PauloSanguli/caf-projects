@@ -25,6 +25,7 @@
       </a>
       <nav class="nav" aria-label="Navegação principal">
         <a href="{% url 'submeter_projecto' %}" class="nav-link {% if request.resolver_match and request.resolver_match.url_name == 'submeter_projecto' %}nav-link--pill{% else %}nav-link--plain{% endif %}">Submeter</a>
+        <a href="{% url 'consultar_projectos_estudantes' %}" class="nav-link {% if request.resolver_match and request.resolver_match.url_name == 'consultar_projectos_estudantes' %}nav-link--pill{% else %}nav-link--plain{% endif %}">Consultar projecto</a>
         <a href="{% url 'lista_projectos_professor' %}" class="nav-link {% if request.resolver_match and request.resolver_match.url_name == 'lista_projectos_professor' %}nav-link--pill{% else %}nav-link--plain{% endif %}">Área do professor</a>
       </nav>
     </div>

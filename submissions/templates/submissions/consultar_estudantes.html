@@ -1,0 +1,94 @@
+{% extends "submissions/base.html" %}
+{% load static %}
+
+{% block title %}Consultar projecto · CAF{% endblock %}
+{% block body_class %}page--consulta{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <h1 class="page-title">Os meus projectos na turma</h1>
+  <p class="page-lede">Seleccione a <strong>classe</strong> e a <strong>turma</strong> do vosso grupo para ver se o projecto já foi submetido e consta na lista.</p>
+</section>
+
+<form class="panel panel--filters" method="get" action="">
+  <div class="filters-bar filters-bar--consulta">
+    <label class="filter-field">
+      <span class="filter-field__label">Classe *</span>
+      <select name="classe" id="consulta_classe" class="filter-select js-custom-select" aria-label="Classe">
+        <option value="">Seleccionar</option>
+        {% for value, label in classes %}
+          <option value="{{ value }}" {% if filtro_classe == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label class="filter-field">
+      <span class="filter-field__label">Turma *</span>
+      <select name="turma" id="consulta_turma" class="filter-select js-custom-select" aria-label="Turma">
+        <option value="">Seleccionar</option>
+        {% for value, label in turmas %}
+          <option value="{{ value }}" {% if filtro_turma == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <button type="submit" class="btn btn--secondary btn--consulta">Mostrar projectos</button>
+  </div>
+</form>
+
+{% if request.GET.classe or request.GET.turma %}
+  {% if not mostrar_resultados %}
+    <p class="consulta-hint panel" role="status">Seleccione <strong>classe</strong> e <strong>turma</strong> e prima «Mostrar projectos».</p>
+  {% endif %}
+{% endif %}
+
+{% if mostrar_resultados %}
+  <section class="consulta-result panel">
+    <div class="consulta-result__head">
+      <h2 class="consulta-result__title">{{ titulo_secao }}</h2>
+      <p class="consulta-result__meta">{{ total }} grupo{{ total|pluralize }} com submissão registada.</p>
+    </div>
+
+    {% if projectos %}
+      <div class="carousel-shell" data-carousel>
+        <button type="button" class="carousel-btn carousel-btn--prev" data-carousel-prev aria-label="Anterior">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="carousel-track" data-carousel-track>
+          {% for p in projectos %}
+            <article class="project-card">
+              <div class="project-card__badge">Submetido</div>
+              <h3 class="project-card__name">{{ p.nome_projecto|default:"Projecto sem nome" }}</h3>
+              <p class="project-card__resp"><span class="project-card__k">Responsável</span> {{ p.nome_responsavel }}</p>
+              <div class="project-card__membros">
+                <span class="project-card__k">Membros</span>
+                <ul class="project-card__list">
+                  {% for m in p.membros_lista %}
+                    <li>{{ m }}</li>
+                  {% empty %}
+                    <li>—</li>
+                  {% endfor %}
+                </ul>
+              </div>
+              <p class="project-card__date">
+                <span class="project-card__k">Submetido em</span>
+                {{ p.data_submissao|date:"d/m/Y H:i" }}
+              </p>
+            </article>
+          {% endfor %}
+        </div>
+        <button type="button" class="carousel-btn carousel-btn--next" data-carousel-next aria-label="Seguinte">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    {% else %}
+      <div class="consulta-empty">
+        <p class="consulta-empty__title">Ainda não há submissões para esta turma.</p>
+        <p class="consulta-empty__hint">Se o vosso grupo já enviou o projecto e não aparece aqui, contactem o professor.</p>
+      </div>
+    {% endif %}
+  </section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'submissions/js/carousel.js' %}" defer></script>
+{% endblock %}
