@@ -20,10 +20,12 @@ wheels/
 .installed.cfg
 *.egg
 
-# Virtual environments
+# Virtual environments (nunca commitar — usar requirements.txt)
 .venv/
 venv/
 ENV/
+env/
+.virtualenv/
 
 # Django
 *.log
