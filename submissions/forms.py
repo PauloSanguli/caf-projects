@@ -43,13 +43,13 @@ class ProjectSubmissionForm(forms.ModelForm):
             "sala": forms.TextInput(attrs={"placeholder": "Ex: 12", "autocomplete": "off"}),
             "classe": forms.Select(
                 attrs={
-                    "class": "field-select",
+                    "class": "field-select js-custom-select",
                     "aria-label": "Classe",
                 }
             ),
             "turma": forms.Select(
                 attrs={
-                    "class": "field-select",
+                    "class": "field-select js-custom-select",
                     "aria-label": "Turma",
                 }
             ),

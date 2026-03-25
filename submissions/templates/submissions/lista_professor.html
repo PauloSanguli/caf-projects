@@ -22,7 +22,7 @@
     </span>
     <label class="filter-field">
       <span class="visually-hidden">Classe</span>
-      <select name="classe" class="filter-select" onchange="this.form.submit()">
+      <select name="classe" id="filter_classe" class="filter-select js-custom-select" aria-label="Filtrar por classe" onchange="this.form.submit()">
         <option value="">Todas as classes</option>
         {% for value, label in classes %}
           <option value="{{ value }}" {% if filtro_classe == value %}selected{% endif %}>{{ label }}</option>
@@ -31,7 +31,7 @@
     </label>
     <label class="filter-field">
       <span class="visually-hidden">Turma</span>
-      <select name="turma" class="filter-select" onchange="this.form.submit()">
+      <select name="turma" id="filter_turma" class="filter-select js-custom-select" aria-label="Filtrar por turma" onchange="this.form.submit()">
         <option value="">Todas as turmas</option>
         {% for value, label in turmas %}
           <option value="{{ value }}" {% if filtro_turma == value %}selected{% endif %}>{{ label }}</option>
