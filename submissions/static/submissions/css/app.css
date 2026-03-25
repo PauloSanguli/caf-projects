@@ -209,6 +209,160 @@ code {
   color: var(--danger);
 }
 
+/* Toasts (mensagens Django) */
+.messages--toast {
+  position: fixed;
+  bottom: 1.15rem;
+  right: 1.15rem;
+  left: auto;
+  z-index: 300;
+  margin: 0;
+  max-width: min(22rem, calc(100vw - 2.3rem));
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.messages--toast .msg {
+  position: relative;
+  pointer-events: auto;
+  padding-right: 2.35rem;
+  box-shadow: var(--shadow-menu);
+  animation: toast-in 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.msg--dismissing {
+  opacity: 0;
+  transform: translateY(0.35rem);
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.msg__close {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.msg__close:hover {
+  background: rgba(31, 31, 31, 0.06);
+  color: var(--ink);
+}
+
+body.confirm-dialog-open {
+  overflow: hidden;
+}
+
+/* Diálogo de confirmação (remover grupo) */
+.confirm-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.confirm-dialog[hidden] {
+  display: none !important;
+}
+
+.confirm-dialog__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(31, 31, 31, 0.38);
+  backdrop-filter: blur(2px);
+}
+
+.confirm-dialog__panel {
+  position: relative;
+  width: min(26rem, 100%);
+  padding: 1.35rem 1.4rem 1.25rem;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow-menu);
+  animation: toast-in 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.confirm-dialog__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.confirm-dialog__text {
+  margin: 0 0 1.15rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.confirm-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.btn-dialog {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.btn-dialog--ghost {
+  background: var(--pill-bg);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.btn-dialog--ghost:hover {
+  border-color: var(--dash);
+  background: var(--surface);
+}
+
+.btn-dialog--danger {
+  background: #fef2f2;
+  border-color: rgba(180, 35, 24, 0.35);
+  color: var(--danger);
+}
+
+.btn-dialog--danger:hover {
+  background: #fee2e2;
+  border-color: var(--danger);
+}
+
 /* ——— Page hero ——— */
 .page-hero {
   margin-bottom: 1.5rem;

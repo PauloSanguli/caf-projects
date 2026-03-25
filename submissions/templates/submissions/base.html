@@ -39,7 +39,7 @@
   </header>
   <main class="wrap main">
     {% if messages %}
-      <ul class="messages" role="status">
+      <ul class="messages messages--toast" role="status" aria-live="polite">
         {% for message in messages %}
           <li class="msg msg-{{ message.tags }}">{{ message }}</li>
         {% endfor %}
@@ -48,6 +48,7 @@
     {% block content %}{% endblock %}
   </main>
   <script src="{% static 'submissions/js/custom-select.js' %}" defer></script>
+  <script src="{% static 'submissions/js/toasts.js' %}" defer></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>

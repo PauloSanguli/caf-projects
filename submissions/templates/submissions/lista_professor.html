@@ -1,4 +1,5 @@
 {% extends "submissions/base.html" %}
+{% load static %}
 
 {% block title %}Área do professor · CAF{% endblock %}
 {% block body_class %}page--prof{% endblock %}
@@ -94,7 +95,7 @@
               {% if p.ficheiro_ata %}
                 <a class="link-download link-download--solid" href="{{ p.ficheiro_ata.url }}" download>PDF</a>
               {% endif %}
-              <form method="post" action="{% url 'remover_submissao_professor' p.pk %}" class="form-remover-grupo" onsubmit="return confirm('Remover este grupo e apagar os ficheiros no servidor?');">
+              <form method="post" action="{% url 'remover_submissao_professor' p.pk %}" class="form-remover-grupo" data-remover-label="{{ p.nome_projecto|default:p.nome_responsavel|truncatechars:72 }}">
                 {% csrf_token %}
                 {% if filtro_classe %}<input type="hidden" name="classe" value="{{ filtro_classe }}">{% endif %}
                 {% if filtro_turma %}<input type="hidden" name="turma" value="{{ filtro_turma }}">{% endif %}
@@ -123,4 +124,27 @@
     </tbody>
   </table>
 </div>
+
+<div id="dialog-remover-grupo" class="confirm-dialog" hidden>
+  <div class="confirm-dialog__backdrop" aria-hidden="true"></div>
+  <div
+    class="confirm-dialog__panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="dialog-remover-heading"
+  >
+    <h2 id="dialog-remover-heading" class="confirm-dialog__title" data-dialog-title>Remover grupo?</h2>
+    <p class="confirm-dialog__text">
+      Os ficheiros no servidor serão apagados. Esta ação não pode ser desfeita.
+    </p>
+    <div class="confirm-dialog__actions">
+      <button type="button" class="btn btn-dialog btn-dialog--ghost" data-action="cancel">Cancelar</button>
+      <button type="button" class="btn btn-dialog btn-dialog--danger" data-action="confirm">Remover</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'submissions/js/professor-remover.js' %}" defer></script>
 {% endblock %}
