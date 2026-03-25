@@ -25,7 +25,16 @@ SECRET_KEY = "django-insecure-d!ez-@g+1in=a(c#61eim)p3xjfp_wmj1zrwp2e3m$h*eh9eq9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Inclui o host do túnel Serveo (ex.: ssh -R caf:80:localhost:3479 → caf.serveousercontent.com)
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "caf.serveousercontent.com",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://caf.serveousercontent.com",
+]
 
 
 # Application definition
