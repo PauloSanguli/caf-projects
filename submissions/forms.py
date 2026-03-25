@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.validators import FileExtensionValidator
 
-from .models import Classe, ProjectSubmission, Turma
+from .models import Classe, ProjectSubmission, SALA_CHOICES, Turma
 
 
 class ProfessorAuthenticationForm(AuthenticationForm):
@@ -60,7 +60,12 @@ class ProjectSubmissionForm(forms.ModelForm):
                     "autocomplete": "off",
                 }
             ),
-            "sala": forms.TextInput(attrs={"placeholder": "Ex: 12", "autocomplete": "off"}),
+            "sala": forms.Select(
+                attrs={
+                    "class": "field-select js-custom-select",
+                    "aria-label": "Sala",
+                }
+            ),
             "classe": forms.Select(
                 attrs={
                     "class": "field-select js-custom-select",
@@ -98,6 +103,7 @@ class ProjectSubmissionForm(forms.ModelForm):
 
         self.fields["classe"].choices = [("", "Seleccionar")] + list(Classe.choices)
         self.fields["turma"].choices = [("", "Seleccionar")] + list(Turma.choices)
+        self.fields["sala"].choices = [("", "Seleccionar")] + list(SALA_CHOICES)
 
         self.fields["ficheiro_projecto"].validators.append(
             FileExtensionValidator(

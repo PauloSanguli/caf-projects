@@ -18,6 +18,10 @@ class Turma(models.TextChoices):
     IG = "IG", "IG"
 
 
+# Salas numeradas de 1 a 14 (valor e rótulo iguais)
+SALA_CHOICES = [(str(i), str(i)) for i in range(1, 15)]
+
+
 def _folder_name(instance):
     """
     Nome da pasta do grupo no disco:
@@ -79,7 +83,7 @@ class ProjectSubmission(models.Model):
         max_length=2,
         choices=Turma.choices,
     )
-    sala = models.CharField("Sala", max_length=50)
+    sala = models.CharField("Sala", max_length=2, choices=SALA_CHOICES)
 
     ficheiro_projecto = models.FileField(
         "Projecto (.zip)",
