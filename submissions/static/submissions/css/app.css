@@ -150,6 +150,23 @@ code {
   border-color: var(--dash);
 }
 
+.nav-link--with-icon {
+  gap: 0.4rem;
+}
+
+.nav-link__icon {
+  flex-shrink: 0;
+  opacity: 0.92;
+}
+
+.nav-link--plain .nav-link__icon {
+  color: inherit;
+}
+
+.nav-link--pill .nav-link__icon {
+  color: var(--accent);
+}
+
 .main {
   padding: 2rem 0 3.5rem;
 }

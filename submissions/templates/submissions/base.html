@@ -26,7 +26,14 @@
       <nav class="nav" aria-label="Navegação principal">
         <a href="{% url 'submeter_projecto' %}" class="nav-link {% if request.resolver_match and request.resolver_match.url_name == 'submeter_projecto' %}nav-link--pill{% else %}nav-link--plain{% endif %}">Submeter</a>
         <a href="{% url 'consultar_projectos_estudantes' %}" class="nav-link {% if request.resolver_match and request.resolver_match.url_name == 'consultar_projectos_estudantes' %}nav-link--pill{% else %}nav-link--plain{% endif %}">Consultar projecto</a>
-        <a href="{% url 'lista_projectos_professor' %}" class="nav-link {% if request.resolver_match and request.resolver_match.url_name == 'lista_projectos_professor' %}nav-link--pill{% else %}nav-link--plain{% endif %}">Área do professor</a>
+        <a href="{% url 'lista_projectos_professor' %}" class="nav-link nav-link--with-icon {% if request.resolver_match and request.resolver_match.url_name == 'lista_projectos_professor' %}nav-link--pill{% else %}nav-link--plain{% endif %}">
+          <svg class="nav-link__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="5" y="11" width="14" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="12" cy="16" r="1.25" fill="currentColor"/>
+          </svg>
+          Área do professor
+        </a>
       </nav>
     </div>
   </header>
