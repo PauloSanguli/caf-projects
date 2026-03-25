@@ -3,6 +3,9 @@ from django.core.validators import FileExtensionValidator
 
 from .models import Classe, ProjectSubmission, Turma
 
+MAX_ZIP_BYTES = 50 * 1024 * 1024
+MAX_PDF_BYTES = 10 * 1024 * 1024
+
 
 class ProjectSubmissionForm(forms.ModelForm):
     class Meta:
@@ -20,27 +23,28 @@ class ProjectSubmissionForm(forms.ModelForm):
         widgets = {
             "nome_projecto": forms.TextInput(
                 attrs={
-                    "placeholder": "Ex.: Site da biblioteca escolar",
+                    "placeholder": "Ex: Sistema de Gestão Escolar",
                     "autocomplete": "off",
+                    "class": "input-lg",
                 }
             ),
             "nome_responsavel": forms.TextInput(
                 attrs={
-                    "placeholder": "Nome completo",
+                    "placeholder": "Nome completo do representante",
                     "autocomplete": "name",
                 }
             ),
-            "membros_grupo": forms.Textarea(
+            "membros_grupo": forms.TextInput(
                 attrs={
-                    "rows": 4,
-                    "placeholder": "Ana Silva, Bruno Costa, … ou um nome por linha",
+                    "placeholder": "Ex: João Silva, Maria Santos",
+                    "autocomplete": "off",
                 }
             ),
-            "sala": forms.TextInput(attrs={"placeholder": "Ex.: 12", "autocomplete": "off"}),
+            "sala": forms.TextInput(attrs={"placeholder": "Ex: 12", "autocomplete": "off"}),
             "classe": forms.Select(
                 attrs={
                     "class": "field-select",
-                    "aria-label": "Classe (10ª ou 11ª)",
+                    "aria-label": "Classe",
                 }
             ),
             "turma": forms.Select(
@@ -49,22 +53,31 @@ class ProjectSubmissionForm(forms.ModelForm):
                     "aria-label": "Turma",
                 }
             ),
-            "ficheiro_projecto": forms.ClearableFileInput(
-                attrs={"accept": ".zip,application/zip"}
+            "ficheiro_projecto": forms.FileInput(
+                attrs={
+                    "accept": ".zip,application/zip",
+                    "class": "dropzone-input",
+                }
             ),
-            "ficheiro_ata": forms.ClearableFileInput(attrs={"accept": ".pdf,application/pdf"}),
+            "ficheiro_ata": forms.FileInput(
+                attrs={"accept": ".pdf,application/pdf", "class": "dropzone-input"}
+            ),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["nome_projecto"].label = "Nome do Projecto (Opcional)"
+        self.fields["nome_responsavel"].label = "Aluno Responsável"
+        self.fields["membros_grupo"].label = (
+            "Outros Membros do Grupo (Separados por vírgula)"
+        )
         self.fields["classe"].label = "Classe"
         self.fields["turma"].label = "Turma"
-        self.fields["classe"].choices = [
-            ("", "— Seleccione a classe —"),
-        ] + list(Classe.choices)
-        self.fields["turma"].choices = [
-            ("", "— Seleccione a turma —"),
-        ] + list(Turma.choices)
+        self.fields["ficheiro_projecto"].label = "Código fonte (ZIP)"
+        self.fields["ficheiro_ata"].label = "Actas e documentação (PDF)"
+
+        self.fields["classe"].choices = [("", "Seleccionar")] + list(Classe.choices)
+        self.fields["turma"].choices = [("", "Seleccionar")] + list(Turma.choices)
 
         self.fields["ficheiro_projecto"].validators.append(
             FileExtensionValidator(
@@ -89,6 +102,10 @@ class ProjectSubmissionForm(forms.ModelForm):
         name = getattr(f, "name", "") or ""
         if not name.lower().endswith(".zip"):
             raise forms.ValidationError("Apenas ficheiros .zip são aceites para o projecto.")
+        if f.size > MAX_ZIP_BYTES:
+            raise forms.ValidationError(
+                "O ficheiro ZIP não pode exceder 50 MB."
+            )
         return f
 
     def clean_ficheiro_ata(self):
@@ -98,4 +115,8 @@ class ProjectSubmissionForm(forms.ModelForm):
         name = getattr(f, "name", "") or ""
         if not name.lower().endswith(".pdf"):
             raise forms.ValidationError("Apenas ficheiros .pdf são aceites para a ata.")
+        if f.size > MAX_PDF_BYTES:
+            raise forms.ValidationError(
+                "O ficheiro PDF não pode exceder 10 MB."
+            )
         return f

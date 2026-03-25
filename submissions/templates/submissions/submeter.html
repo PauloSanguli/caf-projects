@@ -1,76 +1,122 @@
 {% extends "submissions/base.html" %}
+{% load static %}
 
-{% block title %}Submeter projecto · CAF{% endblock %}
+{% block title %}Submeter Projecto · CAF{% endblock %}
+{% block body_class %}page--submit{% endblock %}
 
 {% block content %}
-<section class="panel hero">
-  <h1>Submissão de projecto</h1>
-  <p class="lede">Preencha os dados do grupo e carregue o ZIP do site e o PDF da ata. Campos marcados com * são obrigatórios.</p>
+<section class="page-hero">
+  <h1 class="page-title">Submeter Projecto</h1>
+  <p class="page-lede">Preencha o formulário abaixo para submeter o seu projecto web. Certifique-se de que os ficheiros seguem as normas exigidas.</p>
 </section>
 
-<form class="panel form-card" method="post" enctype="multipart/form-data" novalidate>
+<form class="panel form-card" method="post" enctype="multipart/form-data" novalidate id="form-submeter">
   {% csrf_token %}
 
   {% if form.non_field_errors %}
     <div class="form-errors">{{ form.non_field_errors }}</div>
   {% endif %}
 
-  <fieldset class="fieldset">
-    <legend>Identificação</legend>
-    <div class="field">
-      <label for="id_nome_projecto">Nome do projecto <span class="hint">(opcional)</span></label>
+  <fieldset class="fieldset fieldset--section">
+    <legend class="fieldset-legend">Identificação</legend>
+    <p class="fieldset-desc">Informações sobre o grupo e o projecto</p>
+
+    <div class="field field--full">
+      <label for="id_nome_projecto">{{ form.nome_projecto.label }}</label>
       {{ form.nome_projecto }}
       {% if form.nome_projecto.errors %}<p class="errorlist">{{ form.nome_projecto.errors }}</p>{% endif %}
     </div>
-    <div class="field">
-      <label for="id_nome_responsavel">Estudante responsável *</label>
-      {{ form.nome_responsavel }}
-      {% if form.nome_responsavel.errors %}<p class="errorlist">{{ form.nome_responsavel.errors }}</p>{% endif %}
-    </div>
-    <div class="field">
-      <label for="id_membros_grupo">Membros do grupo *</label>
-      {{ form.membros_grupo }}
-      {% if form.membros_grupo.errors %}<p class="errorlist">{{ form.membros_grupo.errors }}</p>{% endif %}
-      <p class="field-help">Separe por vírgulas ou coloque um nome por linha.</p>
+
+    <div class="form-grid form-grid--2">
+      <div class="field">
+        <label for="id_nome_responsavel">{{ form.nome_responsavel.label }} *</label>
+        {{ form.nome_responsavel }}
+        {% if form.nome_responsavel.errors %}<p class="errorlist">{{ form.nome_responsavel.errors }}</p>{% endif %}
+      </div>
+      <div class="field">
+        <label for="id_membros_grupo">{{ form.membros_grupo.label }} *</label>
+        {{ form.membros_grupo }}
+        {% if form.membros_grupo.errors %}<p class="errorlist">{{ form.membros_grupo.errors }}</p>{% endif %}
+      </div>
     </div>
   </fieldset>
 
-  <fieldset class="fieldset">
-    <legend>Turma e local</legend>
-    <div class="field">
-      <label for="id_classe">{{ form.classe.label }} *</label>
-      {{ form.classe }}
-      {% if form.classe.errors %}<p class="errorlist">{{ form.classe.errors }}</p>{% endif %}
-    </div>
-    <div class="field">
-      <label for="id_turma">{{ form.turma.label }} *</label>
-      {{ form.turma }}
-      {% if form.turma.errors %}<p class="errorlist">{{ form.turma.errors }}</p>{% endif %}
-    </div>
-    <div class="field">
-      <label for="id_sala">Sala *</label>
-      {{ form.sala }}
-      {% if form.sala.errors %}<p class="errorlist">{{ form.sala.errors }}</p>{% endif %}
+  <fieldset class="fieldset fieldset--section">
+    <legend class="fieldset-legend">Turma e Local</legend>
+    <p class="fieldset-desc">Onde e em que contexto o projecto foi desenvolvido</p>
+
+    <div class="form-grid form-grid--3">
+      <div class="field">
+        <label for="id_classe">{{ form.classe.label }} *</label>
+        {{ form.classe }}
+        {% if form.classe.errors %}<p class="errorlist">{{ form.classe.errors }}</p>{% endif %}
+      </div>
+      <div class="field">
+        <label for="id_turma">{{ form.turma.label }} *</label>
+        {{ form.turma }}
+        {% if form.turma.errors %}<p class="errorlist">{{ form.turma.errors }}</p>{% endif %}
+      </div>
+      <div class="field">
+        <label for="id_sala">Sala *</label>
+        {{ form.sala }}
+        {% if form.sala.errors %}<p class="errorlist">{{ form.sala.errors }}</p>{% endif %}
+      </div>
     </div>
   </fieldset>
 
-  <fieldset class="fieldset">
-    <legend>Ficheiros</legend>
-    <div class="field">
-      <label for="id_ficheiro_projecto">Projecto (.zip) *</label>
-      {{ form.ficheiro_projecto }}
-      {% if form.ficheiro_projecto.errors %}<p class="errorlist">{{ form.ficheiro_projecto.errors }}</p>{% endif %}
-      <p class="field-help">HTML, CSS e JavaScript opcional, compactados num único ficheiro ZIP.</p>
-    </div>
-    <div class="field">
-      <label for="id_ficheiro_ata">Ata em PDF *</label>
-      {{ form.ficheiro_ata }}
-      {% if form.ficheiro_ata.errors %}<p class="errorlist">{{ form.ficheiro_ata.errors }}</p>{% endif %}
+  <fieldset class="fieldset fieldset--section fieldset--last">
+    <legend class="fieldset-legend">Ficheiros</legend>
+    <p class="fieldset-desc">Carregue o código fonte e as actas do projecto</p>
+
+    <div class="form-grid form-grid--2 form-grid--files">
+      <div class="field field--drop">
+        <label class="field-label" for="id_ficheiro_projecto">{{ form.ficheiro_projecto.label }} *</label>
+        <div class="dropzone" data-dropzone data-hint-zip>
+          <div class="dropzone__visual" aria-hidden="true">
+            <svg class="dropzone__cloud" width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 18a4 4 0 01-1.75-7.58A4 4 0 0115 8a4 4 0 013.8 5.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M12 12v6m0 0l-2.5-2.5M12 18l2.5-2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <p class="dropzone__text">Clique ou arraste um ficheiro <strong>.ZIP</strong></p>
+            <p class="dropzone__limit">Tamanho máximo: 50MB</p>
+          </div>
+          <p class="dropzone__filename" data-filename hidden></p>
+          {{ form.ficheiro_projecto }}
+        </div>
+        {% if form.ficheiro_projecto.errors %}<p class="errorlist">{{ form.ficheiro_projecto.errors }}</p>{% endif %}
+      </div>
+
+      <div class="field field--drop">
+        <label class="field-label" for="id_ficheiro_ata">{{ form.ficheiro_ata.label }} *</label>
+        <div class="dropzone" data-dropzone data-hint-pdf>
+          <div class="dropzone__visual" aria-hidden="true">
+            <svg class="dropzone__cloud" width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 18a4 4 0 01-1.75-7.58A4 4 0 0115 8a4 4 0 013.8 5.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M12 12v6m0 0l-2.5-2.5M12 18l2.5-2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <p class="dropzone__text">Clique ou arraste um ficheiro <strong>.PDF</strong></p>
+            <p class="dropzone__limit">Tamanho máximo: 10MB</p>
+          </div>
+          <p class="dropzone__filename" data-filename hidden></p>
+          {{ form.ficheiro_ata }}
+        </div>
+        {% if form.ficheiro_ata.errors %}<p class="errorlist">{{ form.ficheiro_ata.errors }}</p>{% endif %}
+      </div>
     </div>
   </fieldset>
 
-  <div class="form-actions">
-    <button type="submit" class="btn primary">Enviar submissão</button>
+  <div class="form-actions form-actions--end">
+    <button type="submit" class="btn btn--submit">
+      <svg class="btn__check" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 12l2.5 2.5L16 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Submeter Projecto
+    </button>
   </div>
 </form>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'submissions/js/form-dropzone.js' %}" defer></script>
 {% endblock %}
