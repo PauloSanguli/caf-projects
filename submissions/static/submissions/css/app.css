@@ -205,6 +205,35 @@ code {
   flex-wrap: wrap;
 }
 
+.page-hero__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.form-logout {
+  margin: 0;
+}
+
+.btn--logout {
+  padding: 0.45rem 0.95rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: #fff;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.btn--logout:hover {
+  color: var(--ink);
+  border-color: var(--dash);
+}
+
 .page-title {
   font-size: clamp(1.5rem, 3vw, 1.75rem);
   font-weight: 700;
@@ -359,6 +388,8 @@ code {
 }
 
 .field input[type="text"],
+.field input[type="password"],
+.field input.input-text,
 .field textarea {
   width: 100%;
   max-width: 100%;
@@ -790,6 +821,32 @@ select.custom-select__native {
   color: var(--accent);
 }
 
+.form-remover-grupo {
+  display: inline;
+  margin-left: 0.45rem;
+  vertical-align: middle;
+}
+
+.btn-remover-grupo {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.55rem;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--danger);
+  background: #fff;
+  border: 1px solid rgba(180, 35, 24, 0.35);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.btn-remover-grupo:hover {
+  background: #fef2f2;
+  border-color: var(--danger);
+}
+
 /* ——— Empty state (inside table) ——— */
 .empty-state {
   text-align: center;
@@ -873,6 +930,34 @@ select.custom-select__native {
 }
 
 /* ——— Página Consultar (estudantes) ——— */
+body.page--login {
+  background: #faf9f6;
+}
+
+.login-hint {
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  font-size: 0.875rem;
+  border-radius: var(--radius-sm);
+}
+
+.login-hint--ok {
+  background: #eef5f1;
+  border: 1px solid rgba(31, 77, 58, 0.2);
+  color: var(--ink);
+}
+
+.login-hint--ok a {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.login-hint--warn {
+  background: #fff8f0;
+  border: 1px solid #fcd9bd;
+  color: var(--ink);
+}
+
 body.page--consulta {
   background: #faf9f6;
 }

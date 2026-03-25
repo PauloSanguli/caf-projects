@@ -9,7 +9,13 @@
     <h1 class="page-title">Projectos submetidos</h1>
     <p class="page-lede">Acesso reservado à equipa pedagógica. Filtre as submissões e descarregue o ZIP do projecto e o PDF da ata.</p>
   </div>
-  <span class="result-badge" aria-live="polite">{{ total }} resultado{{ total|pluralize }}</span>
+  <div class="page-hero__actions">
+    <span class="result-badge" aria-live="polite">{{ total }} resultado{{ total|pluralize }}</span>
+    <form method="post" action="{% url 'professor_logout' %}" class="form-logout">
+      {% csrf_token %}
+      <button type="submit" class="btn btn--logout">Sair</button>
+    </form>
+  </div>
 </section>
 
 <form class="panel panel--filters" method="get" action="" id="form-filtros">
@@ -88,6 +94,12 @@
               {% if p.ficheiro_ata %}
                 <a class="link-download link-download--solid" href="{{ p.ficheiro_ata.url }}" download>PDF</a>
               {% endif %}
+              <form method="post" action="{% url 'remover_submissao_professor' p.pk %}" class="form-remover-grupo" onsubmit="return confirm('Remover este grupo e apagar os ficheiros no servidor?');">
+                {% csrf_token %}
+                {% if filtro_classe %}<input type="hidden" name="classe" value="{{ filtro_classe }}">{% endif %}
+                {% if filtro_turma %}<input type="hidden" name="turma" value="{{ filtro_turma }}">{% endif %}
+                <button type="submit" class="btn-remover-grupo">Remover grupo</button>
+              </form>
             </td>
           </tr>
         {% endfor %}

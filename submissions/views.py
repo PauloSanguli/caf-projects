@@ -1,8 +1,17 @@
+from urllib.parse import urlencode
+
 from django.contrib import messages
-from django.shortcuts import redirect, render
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
 from .forms import ProjectSubmissionForm
 from .models import Classe, ProjectSubmission, Turma
+
+
+def _is_professor(user):
+    """Apenas contas activas com permissão de equipa (staff)."""
+    return user.is_active and user.is_staff
 
 
 def submeter_projecto(request):
@@ -24,6 +33,7 @@ def submeter_projecto(request):
     return render(request, "submissions/submeter.html", {"form": form})
 
 
+@user_passes_test(_is_professor)
 def listar_projectos(request):
     qs = ProjectSubmission.objects.all()
     classe = request.GET.get("classe") or ""
@@ -43,6 +53,33 @@ def listar_projectos(request):
         "total": qs.count(),
     }
     return render(request, "submissions/lista_professor.html", context)
+
+
+@user_passes_test(_is_professor)
+def remover_submissao_professor(request, pk):
+    submission = get_object_or_404(ProjectSubmission, pk=pk)
+    if request.method != "POST":
+        return redirect("lista_projectos_professor")
+
+    if submission.ficheiro_projecto:
+        submission.ficheiro_projecto.delete(save=False)
+    if submission.ficheiro_ata:
+        submission.ficheiro_ata.delete(save=False)
+    submission.delete()
+    messages.success(
+        request,
+        "Grupo e ficheiros associados foram removidos.",
+    )
+
+    params = {}
+    if request.POST.get("classe") in {Classe.DEZ, Classe.ONZE}:
+        params["classe"] = request.POST["classe"]
+    if request.POST.get("turma") in {Turma.IF, Turma.ID, Turma.IB, Turma.IG}:
+        params["turma"] = request.POST["turma"]
+    url = reverse("lista_projectos_professor")
+    if params:
+        url = f"{url}?{urlencode(params)}"
+    return redirect(url)
 
 
 def consultar_projectos_estudantes(request):

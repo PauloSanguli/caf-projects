@@ -1,0 +1,48 @@
+{% extends "submissions/base.html" %}
+
+{% block title %}Entrar · Área do professor · CAF{% endblock %}
+{% block body_class %}page--login{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <h1 class="page-title">Área do professor</h1>
+  <p class="page-lede">Inicie sessão com a conta que tem permissão de equipa (staff) para ver a lista completa e descarregar ficheiros.</p>
+</section>
+
+{% if user.is_authenticated %}
+  {% if user.is_staff %}
+    <p class="panel login-hint login-hint--ok">
+      Já tem sessão iniciada como <strong>{{ user.get_username }}</strong>.
+      <a href="{% url 'lista_projectos_professor' %}">Ir para a lista de projectos</a>
+    </p>
+  {% else %}
+    <p class="panel login-hint login-hint--warn">
+      A conta <strong>{{ user.get_username }}</strong> não tem permissão para esta área. Utilize uma conta de equipa (staff) ou contacte o administrador.
+    </p>
+  {% endif %}
+{% endif %}
+
+<form class="panel form-card form-card--login" method="post" action="{% url 'professor_login' %}">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ next|default:'/professor/' }}">
+
+  {% if form.non_field_errors %}
+    <div class="form-errors">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <div class="field">
+    <label for="id_username">Utilizador</label>
+    {{ form.username }}
+    {% if form.username.errors %}<p class="errorlist">{{ form.username.errors }}</p>{% endif %}
+  </div>
+  <div class="field">
+    <label for="id_password">Palavra-passe</label>
+    {{ form.password }}
+    {% if form.password.errors %}<p class="errorlist">{{ form.password.errors }}</p>{% endif %}
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn--primary">Entrar</button>
+  </div>
+</form>
+{% endblock %}

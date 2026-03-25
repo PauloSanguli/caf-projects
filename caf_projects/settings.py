@@ -119,3 +119,8 @@ STATIC_URL = "static/"
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+# Autenticação — Área do professor (apenas utilizadores staff)
+LOGIN_URL = "/professor/entrar/"
+LOGIN_REDIRECT_URL = "/professor/"
+LOGOUT_REDIRECT_URL = "/"

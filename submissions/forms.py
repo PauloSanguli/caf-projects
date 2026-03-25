@@ -1,7 +1,27 @@
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 from django.core.validators import FileExtensionValidator
 
 from .models import Classe, ProjectSubmission, Turma
+
+
+class ProfessorAuthenticationForm(AuthenticationForm):
+    """Formulário de login da área do professor (estilos alinhados ao site)."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["username"].widget.attrs.update(
+            {
+                "class": "input-text",
+                "autocomplete": "username",
+            }
+        )
+        self.fields["password"].widget.attrs.update(
+            {
+                "class": "input-text",
+                "autocomplete": "current-password",
+            }
+        )
 
 MAX_ZIP_BYTES = 50 * 1024 * 1024
 MAX_PDF_BYTES = 10 * 1024 * 1024
