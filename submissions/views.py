@@ -21,12 +21,12 @@ def submeter_projecto(request):
             form.save()
             messages.success(
                 request,
-                "Submissão recebida com sucesso. Obrigado.",
+                "Submissão recebida com sucesso. O envio foi registado.",
             )
             return redirect("submeter_projecto")
         messages.error(
             request,
-            "Corrija os erros indicados abaixo e tente novamente.",
+            "Não foi possível concluir a submissão. Corrija os campos assinalados e tente novamente.",
         )
     else:
         form = ProjectSubmissionForm()

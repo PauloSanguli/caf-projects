@@ -4,8 +4,9 @@
 (function () {
   "use strict";
 
-  var SUCCESS_MS = 5500;
-  var ERROR_MS = 9000;
+  var SUCCESS_MS = 6000;
+  var ERROR_MS = 9500;
+  var WARNING_MS = 7500;
 
   function dismiss(el) {
     if (!el || el.classList.contains("msg--dismissing")) return;
@@ -20,8 +21,9 @@
     if (!stack) return;
 
     stack.querySelectorAll(".msg").forEach(function (msg) {
-      var isError = msg.classList.contains("msg-error");
-      var delay = isError ? ERROR_MS : SUCCESS_MS;
+      var delay = SUCCESS_MS;
+      if (msg.classList.contains("msg-error")) delay = ERROR_MS;
+      else if (msg.classList.contains("msg-warning")) delay = WARNING_MS;
       var t = window.setTimeout(function () {
         dismiss(msg);
       }, delay);

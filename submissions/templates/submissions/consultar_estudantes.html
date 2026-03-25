@@ -10,7 +10,7 @@
   <p class="page-lede">Seleccione a <strong>classe</strong> e a <strong>turma</strong> do vosso grupo para ver se o projecto já foi submetido e consta na lista.</p>
 </section>
 
-<form class="panel panel--filters" method="get" action="">
+<form id="form-consulta" class="panel panel--filters" method="get" action="" data-loading-overlay="loading-consulta">
   <div class="filters-bar filters-bar--consulta">
     <label class="filter-field">
       <span class="filter-field__label">Classe *</span>
@@ -33,6 +33,14 @@
     <button type="submit" class="btn btn--secondary btn--consulta">Mostrar projectos</button>
   </div>
 </form>
+
+<div id="loading-consulta" class="page-loading" data-page-loading hidden aria-hidden="true">
+  <div class="page-loading__backdrop" aria-hidden="true"></div>
+  <div class="page-loading__box" role="status" aria-live="polite">
+    <div class="page-loading__spinner" aria-hidden="true"></div>
+    <p class="page-loading__text">A carregar resultados…</p>
+  </div>
+</div>
 
 {% if request.GET.classe or request.GET.turma %}
   {% if not mostrar_resultados %}
@@ -90,5 +98,6 @@
 {% endblock %}
 
 {% block extra_js %}
+  <script src="{% static 'submissions/js/page-loading.js' %}" defer></script>
   <script src="{% static 'submissions/js/carousel.js' %}" defer></script>
 {% endblock %}

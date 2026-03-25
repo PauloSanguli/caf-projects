@@ -209,6 +209,18 @@ code {
   color: var(--danger);
 }
 
+.msg-warning {
+  border-color: rgba(180, 120, 30, 0.25);
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.msg-info {
+  border-color: rgba(37, 99, 235, 0.2);
+  background: #eff6ff;
+  color: #1e3a8a;
+}
+
 /* Toasts (mensagens Django) */
 .messages--toast {
   position: fixed;
@@ -361,6 +373,76 @@ body.confirm-dialog-open {
 .btn-dialog--danger:hover {
   background: #fee2e2;
   border-color: var(--danger);
+}
+
+/* Overlay de carregamento (submissão / consulta) */
+.page-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.page-loading[hidden] {
+  display: none !important;
+}
+
+.page-loading__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(250, 249, 246, 0.82);
+  backdrop-filter: blur(4px);
+}
+
+.page-loading__box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  max-width: 18rem;
+  padding: 1.5rem 1.75rem;
+  text-align: center;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow-menu);
+}
+
+.page-loading__spinner {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: 3px solid var(--line-strong);
+  border-top-color: var(--accent);
+  animation: page-loading-spin 0.75s linear infinite;
+}
+
+@keyframes page-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.page-loading__text {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.page-loading__hint {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+body.page-loading--active {
+  overflow: hidden;
 }
 
 /* ——— Page hero ——— */
