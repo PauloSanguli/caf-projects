@@ -15,6 +15,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -25,15 +26,17 @@ SECRET_KEY = "django-insecure-d!ez-@g+1in=a(c#61eim)p3xjfp_wmj1zrwp2e3m$h*eh9eq9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# Inclui o host do túnel Serveo (ex.: ssh -R caf:80:localhost:3479 → caf.serveousercontent.com)
+# Hosts do túnel Serveo (o subdomínio pode variar: serveousercontent vs serveusercontent)
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "caf.serveousercontent.com",
+    "caf.serveusercontent.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://caf.serveousercontent.com",
+    "https://caf.serveusercontent.com",
 ]
 
 

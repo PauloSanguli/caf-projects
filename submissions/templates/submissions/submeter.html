@@ -10,6 +10,17 @@
   <p class="page-lede">Preencha o formulário abaixo para submeter o seu projecto web. Certifique-se de que os ficheiros seguem as normas exigidas.</p>
 </section>
 
+{% with host=request.get_host|default:"" %}
+  {% if "serveousercontent" in host or "serveusercontent" in host or "serveo.net" in host %}
+    <div class="login-hint login-hint--warn tunnel-hint" role="note">
+      <strong>Envio pelo túnel público (Serveo):</strong>
+      ficheiros grandes demoram a enviar e a ligação pode ser cortada (no browser pode aparecer
+      <code>ERR_HTTP2_PROTOCOL_ERROR</code> ou página em branco). Para submissões fiáveis, use
+      <code>http://127.0.0.1:3479</code> na mesma máquina ou outro túnel (ex.: ngrok). Se precisar do Serveo, tente ZIP/PDF mais pequenos ou uma rede mais estável.
+    </div>
+  {% endif %}
+{% endwith %}
+
 <form class="panel form-card" method="post" enctype="multipart/form-data" novalidate id="form-submeter" data-loading-overlay="loading-submeter">
   {% csrf_token %}
 

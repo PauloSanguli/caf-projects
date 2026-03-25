@@ -20,8 +20,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from submissions.views import favicon_svg
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("favicon.ico", favicon_svg),
     path("", include("submissions.urls")),
 ]
 

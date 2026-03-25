@@ -1,12 +1,29 @@
+from pathlib import Path
 from urllib.parse import urlencode
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
+from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from .forms import ProjectSubmissionForm
 from .models import Classe, ProjectSubmission, Turma
+
+
+def favicon_svg(request):
+    """Serve /favicon.ico como SVG (evita 404 sem depender do URL de static)."""
+    path = (
+        Path(settings.BASE_DIR)
+        / "submissions"
+        / "static"
+        / "submissions"
+        / "favicon.svg"
+    )
+    if not path.is_file():
+        raise Http404()
+    return FileResponse(path.open("rb"), content_type="image/svg+xml")
 
 
 def _is_professor(user):

@@ -1,24 +1,31 @@
 #!/usr/bin/env bash
+# Arranque: runserver + túnel Serveo (reinicia o SSH se cair).
+# Requer: Python com dependências (preferir pasta .venv neste directório).
 set -u
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT" || exit 1
 
-# Ambiente virtual (tenta .venv primeiro, depois venv)
-if [[ -f ".venv/bin/activate" ]]; then
+# Activa apenas se o script existir (nunca falha por falta de venv)
+if [[ -r ".venv/bin/activate" ]]; then
   # shellcheck source=/dev/null
-  source ".venv/bin/activate"
-elif [[ -f "venv/bin/activate" ]]; then
+  . ".venv/bin/activate"
+elif [[ -r "venv/bin/activate" ]]; then
   # shellcheck source=/dev/null
-  source "venv/bin/activate"
+  . "venv/bin/activate"
 fi
 
-# 1) subir a API na porta 3479 em background
 python3 manage.py runserver 0.0.0.0:3479 &
 
-# 2) túnel Serveo que reconecta sempre que cair
+# Keepalive: reduz quedas do túnel durante uploads longos (ZIP/PDF).
+SERVEO_SSH_OPTS=(
+  -o ServerAliveInterval=15
+  -o ServerAliveCountMax=12
+  -o TCPKeepAlive=yes
+)
+
 while true; do
-  ssh -R caf:80:localhost:3479 serveo.net
+  ssh "${SERVEO_SSH_OPTS[@]}" -R caf:80:localhost:3479 serveo.net
   echo "Serveo caiu, a reconectar em 5s..."
   sleep 5
 done
