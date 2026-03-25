@@ -1211,15 +1211,6 @@ body.page--login {
   color: var(--ink);
 }
 
-.tunnel-hint {
-  margin-bottom: 1.25rem;
-  line-height: 1.5;
-}
-
-.tunnel-hint code {
-  font-size: 0.8125rem;
-}
-
 body.page--consulta {
   background: #faf9f6;
 }
