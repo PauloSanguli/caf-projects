@@ -90,10 +90,10 @@
             <td data-label="Data">{{ p.data_submissao|date:"d/m/Y H:i" }}</td>
             <td data-label="Ficheiros" class="cell-files">
               {% if p.ficheiro_projecto %}
-                <a class="link-download" href="{{ p.ficheiro_projecto.url }}" download>ZIP</a>
+                <a class="link-download" href="{% url 'professor_download_ficheiro' p.pk 'zip' %}">ZIP</a>
               {% endif %}
               {% if p.ficheiro_ata %}
-                <a class="link-download link-download--solid" href="{{ p.ficheiro_ata.url }}" download>PDF</a>
+                <a class="link-download link-download--solid" href="{% url 'professor_download_ficheiro' p.pk 'pdf' %}">PDF</a>
               {% endif %}
               <form method="post" action="{% url 'remover_submissao_professor' p.pk %}" class="form-remover-grupo" data-remover-label="{{ p.nome_projecto|default:p.nome_responsavel|truncatechars:72 }}">
                 {% csrf_token %}

@@ -182,6 +182,10 @@ if _supabase_storage_ready:
                 "secret_key": os.environ["SUPABASE_S3_SECRET_ACCESS_KEY"],
                 "endpoint_url": os.environ["SUPABASE_S3_ENDPOINT"],
                 "region_name": os.environ["SUPABASE_S3_REGION"],
+                # Sem domínio personalizado: usar presigned URLs (boto). Se AWS_S3_CUSTOM_DOMAIN
+                # estiver definido no ambiente, o storages devolve URL "pública" sem ?X-Amz-*
+                # e o Supabase responde AccessDenied / Missing signature em buckets privados.
+                "custom_domain": None,
                 "addressing_style": "path",
                 "default_acl": None,
                 "querystring_auth": True,

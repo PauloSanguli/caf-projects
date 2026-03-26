@@ -8,6 +8,8 @@ from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
+from botocore.exceptions import ClientError
+
 from .forms import ProjectSubmissionForm
 from .models import Classe, ProjectSubmission, Turma
 
@@ -70,6 +72,39 @@ def listar_projectos(request):
         "total": qs.count(),
     }
     return render(request, "submissions/lista_professor.html", context)
+
+
+@user_passes_test(_is_professor)
+def download_ficheiro_professor(request, pk, kind):
+    """
+    Descarrega ZIP/PDF via Django (streaming com credenciais do servidor).
+    Evita depender de URLs pré-assinadas S3/Supabase no browser (Missing signature, etc.).
+    """
+    submission = get_object_or_404(ProjectSubmission, pk=pk)
+    if kind == "zip":
+        field = submission.ficheiro_projecto
+        download_name = "projecto.zip"
+        content_type = "application/zip"
+    elif kind == "pdf":
+        field = submission.ficheiro_ata
+        download_name = "ata.pdf"
+        content_type = "application/pdf"
+    else:
+        raise Http404()
+    if not field or not field.name:
+        raise Http404()
+    try:
+        fh = field.open("rb")
+    except OSError:
+        raise Http404()
+    except ClientError:
+        raise Http404()
+    return FileResponse(
+        fh,
+        as_attachment=True,
+        filename=download_name,
+        content_type=content_type,
+    )
 
 
 @user_passes_test(_is_professor)
