@@ -28,5 +28,5 @@ urlpatterns = [
     path("", include("submissions.urls")),
 ]
 
-if settings.DEBUG:
+if settings.DEBUG and getattr(settings, "MEDIA_ROOT", None):
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
