@@ -15,9 +15,37 @@
 {% endblock %}
 
 {% block content %}
-<section class="page-hero">
-  <h1 class="page-title">Submeter Projecto</h1>
-  <p class="page-lede">Preencha o formulário abaixo para submeter o seu projecto web. Certifique-se de que os ficheiros seguem as normas exigidas.</p>
+<section class="page-hero page-hero--row page-hero--submit-head">
+  <div class="page-hero__text">
+    <h1 class="page-title">Submeter Projecto</h1>
+    <p class="page-lede">Preencha o formulário abaixo para submeter o seu projecto web. Certifique-se de que os ficheiros seguem as normas exigidas.</p>
+  </div>
+  <aside
+    class="deadline-countdown"
+    id="deadline-countdown"
+    data-deadline="{{ deadline_entrega_iso }}"
+    aria-labelledby="deadline-countdown-label"
+  >
+    <h2 id="deadline-countdown-label" class="deadline-countdown__heading">Tempo restante</h2>
+    <div class="deadline-countdown__grid" role="timer" aria-live="polite">
+      <div class="deadline-countdown__card" data-countdown-hours>00</div>
+      <span class="deadline-countdown__sep" aria-hidden="true">
+        <span class="deadline-countdown__sep-dot"></span>
+        <span class="deadline-countdown__sep-dot"></span>
+      </span>
+      <div class="deadline-countdown__card" data-countdown-minutes>00</div>
+      <span class="deadline-countdown__sep" aria-hidden="true">
+        <span class="deadline-countdown__sep-dot"></span>
+        <span class="deadline-countdown__sep-dot"></span>
+      </span>
+      <div class="deadline-countdown__card" data-countdown-seconds>00</div>
+      <span class="deadline-countdown__unit-name">Horas</span>
+      <span class="deadline-countdown__sep-spacer" aria-hidden="true"></span>
+      <span class="deadline-countdown__unit-name">Min</span>
+      <span class="deadline-countdown__sep-spacer" aria-hidden="true"></span>
+      <span class="deadline-countdown__unit-name">Seg</span>
+    </div>
+  </aside>
 </section>
 
 <form class="panel form-card" method="post" enctype="multipart/form-data" novalidate id="form-submeter" data-loading-overlay="loading-submeter">
@@ -139,4 +167,5 @@
 {% block extra_js %}
   <script src="{% static 'submissions/js/form-dropzone.js' %}" defer></script>
   <script src="{% static 'submissions/js/page-loading.js' %}" defer></script>
+  <script src="{% static 'submissions/js/deadline-countdown.js' %}" defer></script>
 {% endblock %}
