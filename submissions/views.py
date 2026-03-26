@@ -1,5 +1,7 @@
+from datetime import datetime, time, timedelta
 from pathlib import Path
 from urllib.parse import urlencode
+from zoneinfo import ZoneInfo
 
 from django.conf import settings
 from django.contrib import messages
@@ -7,6 +9,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils import timezone
 
 from botocore.exceptions import ClientError
 
@@ -33,6 +36,14 @@ def _is_professor(user):
     return user.is_active and user.is_staff
 
 
+def _deadline_entrega_tomorrow_14h_iso():
+    """Amanhã às 14:00 no fuso de settings.TIME_ZONE (ISO para o contador no browser)."""
+    tz = ZoneInfo(str(settings.TIME_ZONE))
+    now = timezone.now().astimezone(tz)
+    tomorrow = now.date() + timedelta(days=1)
+    return datetime.combine(tomorrow, time(14, 0), tzinfo=tz).isoformat()
+
+
 def submeter_projecto(request):
     if request.method == "POST":
         form = ProjectSubmissionForm(request.POST, request.FILES)
@@ -49,7 +60,14 @@ def submeter_projecto(request):
         )
     else:
         form = ProjectSubmissionForm()
-    return render(request, "submissions/submeter.html", {"form": form})
+    return render(
+        request,
+        "submissions/submeter.html",
+        {
+            "form": form,
+            "deadline_entrega_iso": _deadline_entrega_tomorrow_14h_iso(),
+        },
+    )
 
 
 @user_passes_test(_is_professor)

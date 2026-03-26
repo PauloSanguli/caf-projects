@@ -15,9 +15,20 @@
 {% endblock %}
 
 {% block content %}
-<section class="page-hero">
-  <h1 class="page-title">Submeter Projecto</h1>
-  <p class="page-lede">Preencha o formulário abaixo para submeter o seu projecto web. Certifique-se de que os ficheiros seguem as normas exigidas.</p>
+<section class="page-hero page-hero--row page-hero--submit-head">
+  <div class="page-hero__text">
+    <h1 class="page-title">Submeter Projecto</h1>
+    <p class="page-lede">Preencha o formulário abaixo para submeter o seu projecto web. Certifique-se de que os ficheiros seguem as normas exigidas.</p>
+  </div>
+  <aside
+    class="deadline-countdown"
+    id="deadline-countdown"
+    data-deadline="{{ deadline_entrega_iso }}"
+    aria-labelledby="deadline-countdown-label"
+  >
+    <p id="deadline-countdown-label" class="deadline-countdown__label">Tempo restante</p>
+    <p class="deadline-countdown__timer" data-countdown-timer role="timer" aria-live="polite">00:00:00</p>
+  </aside>
 </section>
 
 <form class="panel form-card" method="post" enctype="multipart/form-data" novalidate id="form-submeter" data-loading-overlay="loading-submeter">
@@ -139,4 +150,5 @@
 {% block extra_js %}
   <script src="{% static 'submissions/js/form-dropzone.js' %}" defer></script>
   <script src="{% static 'submissions/js/page-loading.js' %}" defer></script>
+  <script src="{% static 'submissions/js/deadline-countdown.js' %}" defer></script>
 {% endblock %}
