@@ -26,8 +26,25 @@
     data-deadline="{{ deadline_entrega_iso }}"
     aria-labelledby="deadline-countdown-label"
   >
-    <p id="deadline-countdown-label" class="deadline-countdown__label">Tempo restante</p>
-    <p class="deadline-countdown__timer" data-countdown-timer role="timer" aria-live="polite">00:00:00</p>
+    <h2 id="deadline-countdown-label" class="deadline-countdown__heading">Tempo restante</h2>
+    <div class="deadline-countdown__grid" role="timer" aria-live="polite">
+      <div class="deadline-countdown__card" data-countdown-hours>00</div>
+      <span class="deadline-countdown__sep" aria-hidden="true">
+        <span class="deadline-countdown__sep-dot"></span>
+        <span class="deadline-countdown__sep-dot"></span>
+      </span>
+      <div class="deadline-countdown__card" data-countdown-minutes>00</div>
+      <span class="deadline-countdown__sep" aria-hidden="true">
+        <span class="deadline-countdown__sep-dot"></span>
+        <span class="deadline-countdown__sep-dot"></span>
+      </span>
+      <div class="deadline-countdown__card" data-countdown-seconds>00</div>
+      <span class="deadline-countdown__unit-name">Horas</span>
+      <span class="deadline-countdown__sep-spacer" aria-hidden="true"></span>
+      <span class="deadline-countdown__unit-name">Min</span>
+      <span class="deadline-countdown__sep-spacer" aria-hidden="true"></span>
+      <span class="deadline-countdown__unit-name">Seg</span>
+    </div>
   </aside>
 </section>
 
