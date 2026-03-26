@@ -1,0 +1,11 @@
+# Blueprint Render: https://render.com/docs/infrastructure-as-code
+# Ajuste o nome do serviço se já tiver um Web Service criado no dashboard.
+services:
+  - type: web
+    name: caf-projects
+    runtime: python
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: gunicorn caf_projects.wsgi:application
+    envVars:
+      - key: PRODUCTION
+        value: "true"

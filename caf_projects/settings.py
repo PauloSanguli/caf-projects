@@ -29,6 +29,10 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() in ("1", "true", "yes")
 
+# Ambiente de produção (Render, etc.): cookies seguros, WhiteNoise, etc.
+# Não usar DEBUG para isto — DJANGO_DEBUG controla apenas o modo de desenvolvimento do Django.
+PRODUCTION = os.environ.get("PRODUCTION", "False").lower() in ("1", "true", "yes")
+
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
@@ -57,7 +61,7 @@ for _o in os.environ.get("CSRF_TRUSTED_ORIGINS_EXTRA", "").split(","):
     if _o and _o not in CSRF_TRUSTED_ORIGINS:
         CSRF_TRUSTED_ORIGINS.append(_o)
 
-if not DEBUG:
+if PRODUCTION:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
@@ -77,6 +81,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -144,6 +149,14 @@ USE_TZ = True
 
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Em produção, WhiteNoise comprime e serve a partir de STATIC_ROOT (após collectstatic).
+_staticfiles_backend = (
+    "whitenoise.storage.CompressedStaticFilesStorage"
+    if PRODUCTION
+    else "django.contrib.staticfiles.storage.StaticFilesStorage"
+)
 
 # --- Media: Supabase Storage (S3) ou disco local ---
 MEDIA_URL = "/media/"
@@ -177,7 +190,7 @@ if _supabase_storage_ready:
             },
         },
         "staticfiles": {
-            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+            "BACKEND": _staticfiles_backend,
         },
     }
     MEDIA_ROOT = None
@@ -192,7 +205,7 @@ else:
             },
         },
         "staticfiles": {
-            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+            "BACKEND": _staticfiles_backend,
         },
     }
     MEDIA_ROOT = _media_dir
