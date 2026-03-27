@@ -1,4 +1,4 @@
-from datetime import datetime, time, timedelta
+from datetime import datetime, time
 from pathlib import Path
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
@@ -36,12 +36,11 @@ def _is_professor(user):
     return user.is_active and user.is_staff
 
 
-def _deadline_entrega_tomorrow_14h_iso():
-    """Amanhã às 14:00 no fuso de settings.TIME_ZONE (ISO para o contador no browser)."""
+def _deadline_entrega_hoje_14h_iso():
+    """Hoje às 14:00 no fuso de settings.TIME_ZONE (ISO para o contador no browser)."""
     tz = ZoneInfo(str(settings.TIME_ZONE))
     now = timezone.now().astimezone(tz)
-    tomorrow = now.date() + timedelta(days=1)
-    return datetime.combine(tomorrow, time(14, 0), tzinfo=tz).isoformat()
+    return datetime.combine(now.date(), time(14, 0), tzinfo=tz).isoformat()
 
 
 def submeter_projecto(request):
@@ -65,7 +64,7 @@ def submeter_projecto(request):
         "submissions/submeter.html",
         {
             "form": form,
-            "deadline_entrega_iso": _deadline_entrega_tomorrow_14h_iso(),
+            "deadline_entrega_iso": _deadline_entrega_hoje_14h_iso(),
         },
     )
 
