@@ -94,6 +94,8 @@ class ProjectSubmission(models.Model):
         "Ata em PDF",
         upload_to=upload_ata_pdf,
         help_text="PDF com a ata e descrição do projecto.",
+        blank=True,
+        null=True,
     )
 
     data_submissao = models.DateTimeField(auto_now_add=True)
