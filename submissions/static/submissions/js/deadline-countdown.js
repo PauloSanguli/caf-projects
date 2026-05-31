@@ -1,9 +1,11 @@
 (function () {
   var root = document.getElementById("deadline-countdown");
   if (!root) return;
-  var iso = root.dataset.deadline;
-  if (!iso) return;
-  var deadline = new Date(iso);
+  var msRaw = root.dataset.deadlineMs;
+  if (msRaw === undefined || msRaw === "") return;
+  var ms = parseInt(msRaw, 10);
+  if (Number.isNaN(ms)) return;
+  var deadline = new Date(ms);
   if (isNaN(deadline.getTime())) return;
 
   var elH = root.querySelector("[data-countdown-hours]");

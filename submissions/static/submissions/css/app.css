@@ -694,7 +694,29 @@ body.page-loading--active {
 .filters-bar__actions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
   margin-left: auto;
+}
+
+.btn-baixar-tudo {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.95rem;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  color: #fff;
+  text-decoration: none;
+  background: var(--accent);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--accent);
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.btn-baixar-tudo:hover {
+  color: #fff;
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 
 .btn-clear {

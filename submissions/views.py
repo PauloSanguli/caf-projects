@@ -1,12 +1,14 @@
+import csv
+import io
+import zipfile
 from datetime import datetime, time
 from pathlib import Path
 from urllib.parse import urlencode
-from zoneinfo import ZoneInfo
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -36,11 +38,16 @@ def _is_professor(user):
     return user.is_active and user.is_staff
 
 
-def _deadline_entrega_hoje_14h_iso():
-    """Hoje às 14:00 no fuso de settings.TIME_ZONE (ISO para o contador no browser)."""
-    tz = ZoneInfo(str(settings.TIME_ZONE))
-    now = timezone.now().astimezone(tz)
-    return datetime.combine(now.date(), time(14, 0), tzinfo=tz).isoformat()
+def _deadline_entrega_hoje_14h_ms():
+    """
+    Hoje às 14:00 no fuso activo (TIME_ZONE).
+    Devolve milissegundos Unix para o JS — evita erros de 1h no parse de ISO no browser.
+    """
+    tz = timezone.get_current_timezone()
+    local_date = timezone.localtime().date()
+    naive = datetime.combine(local_date, time(14, 0))
+    deadline = timezone.make_aware(naive, tz)
+    return int(deadline.timestamp() * 1000)
 
 
 def submeter_projecto(request):
@@ -64,7 +71,7 @@ def submeter_projecto(request):
         "submissions/submeter.html",
         {
             "form": form,
-            "deadline_entrega_iso": _deadline_entrega_hoje_14h_iso(),
+            "deadline_entrega_ms": _deadline_entrega_hoje_14h_ms(),
         },
     )
 
@@ -121,6 +128,71 @@ def download_ficheiro_professor(request, pk, kind):
         as_attachment=True,
         filename=download_name,
         content_type=content_type,
+    )
+
+
+def _csv_grupo_bytes(submission):
+    """UTF-8 com BOM para Excel; colunas nome, turma, sala, nota."""
+    out = io.StringIO()
+    w = csv.writer(out, lineterminator="\n")
+    w.writerow(["nome", "turma", "sala", "nota"])
+    nota_str = ""
+    if submission.nota is not None:
+        nota_str = str(submission.nota).replace(".", ",")
+    turma = submission.turma
+    sala = submission.sala
+    for nome in submission.nomes_alunos_grupo():
+        w.writerow([nome, turma, sala, nota_str])
+    return out.getvalue().encode("utf-8-sig")
+
+
+@user_passes_test(_is_professor)
+def professor_baixar_tudo(request):
+    """
+    ZIP com todas as submissões visíveis (filtros classe/turma),
+    mesma árvore que no storage + grupo.csv por pasta.
+    """
+    qs = ProjectSubmission.objects.all().order_by("-data_submissao")
+    classe = request.GET.get("classe") or ""
+    turma = request.GET.get("turma") or ""
+    if classe in {Classe.DEZ, Classe.ONZE}:
+        qs = qs.filter(classe=classe)
+    if turma in {Turma.IF, Turma.ID, Turma.IB, Turma.IG}:
+        qs = qs.filter(turma=turma)
+
+    if not qs.exists():
+        return HttpResponse(
+            "Não há submissões para descarregar com os filtros actuais.",
+            status=404,
+            content_type="text/plain; charset=utf-8",
+        )
+
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+        for sub in qs:
+            base = sub.caminho_pasta_grupo().replace("\\", "/")
+            zf.writestr(f"{base}/grupo.csv", _csv_grupo_bytes(sub))
+            pairs = (
+                (sub.ficheiro_projecto, "projecto.zip"),
+                (sub.ficheiro_ata, "ata.pdf"),
+            )
+            for field, arcname in pairs:
+                if not field or not field.name:
+                    continue
+                try:
+                    with field.open("rb") as fh:
+                        zf.writestr(f"{base}/{arcname}", fh.read())
+                except (OSError, ClientError):
+                    continue
+
+    buf.seek(0)
+    stamp = timezone.localtime().strftime("%Y%m%d-%H%M")
+    filename = f"caf-projectos-{stamp}.zip"
+    return FileResponse(
+        buf,
+        as_attachment=True,
+        filename=filename,
+        content_type="application/zip",
     )
 
 

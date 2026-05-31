@@ -35,5 +35,10 @@ urlpatterns = [
         views.download_ficheiro_professor,
         name="professor_download_ficheiro",
     ),
+    path(
+        "professor/baixar-tudo/",
+        views.professor_baixar_tudo,
+        name="professor_baixar_tudo",
+    ),
     path("professor/", views.listar_projectos, name="lista_projectos_professor"),
 ]

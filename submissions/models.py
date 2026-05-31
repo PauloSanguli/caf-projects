@@ -120,3 +120,24 @@ class ProjectSubmission(models.Model):
         raw = self.membros_grupo.replace("\n", ",")
         partes = [p.strip() for p in raw.split(",") if p.strip()]
         return partes
+
+    def caminho_pasta_grupo(self):
+        """Caminho relativo igual ao do storage (classe_X/turma/pasta_do_grupo)."""
+        return os.path.join(
+            f"classe_{self.classe}",
+            self.turma,
+            _folder_name(self),
+        )
+
+    def nomes_alunos_grupo(self):
+        """Responsável + membros, sem duplicados, para CSV."""
+        seen = set()
+        nomes = []
+        for n in [self.nome_responsavel.strip(), *self.membros_lista()]:
+            if not n:
+                continue
+            key = n.lower()
+            if key not in seen:
+                seen.add(key)
+                nomes.append(n)
+        return nomes
