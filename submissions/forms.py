@@ -119,7 +119,6 @@ class ProjectSubmissionForm(forms.ModelForm):
             )
         )
         self.fields["nome_responsavel"].required = True
-        self.fields["membros_grupo"].required = True
         self.fields["sala"].required = True
 
     def clean_ficheiro_projecto(self):

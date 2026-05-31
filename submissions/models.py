@@ -74,6 +74,8 @@ class ProjectSubmission(models.Model):
     membros_grupo = models.TextField(
         "Membros do grupo",
         help_text="Um por linha ou separados por vírgulas.",
+        blank=True,
+        default="",
     )
     classe = models.CharField(
         max_length=2,
