@@ -99,7 +99,8 @@ class ProjectSubmissionForm(forms.ModelForm):
         self.fields["classe"].label = "Classe"
         self.fields["turma"].label = "Turma"
         self.fields["ficheiro_projecto"].label = "Código fonte (ZIP)"
-        self.fields["ficheiro_ata"].label = "Actas e documentação (PDF)"
+        self.fields["ficheiro_ata"].label = "Actas e documentação (PDF, Opcional)"
+        self.fields["ficheiro_ata"].required = False
 
         self.fields["classe"].choices = [("", "Seleccionar")] + list(Classe.choices)
         self.fields["turma"].choices = [("", "Seleccionar")] + list(Turma.choices)
@@ -118,7 +119,6 @@ class ProjectSubmissionForm(forms.ModelForm):
             )
         )
         self.fields["nome_responsavel"].required = True
-        self.fields["membros_grupo"].required = True
         self.fields["sala"].required = True
 
     def clean_ficheiro_projecto(self):
@@ -137,7 +137,7 @@ class ProjectSubmissionForm(forms.ModelForm):
     def clean_ficheiro_ata(self):
         f = self.cleaned_data.get("ficheiro_ata")
         if not f:
-            raise forms.ValidationError("É obrigatório enviar a ata em PDF.")
+            return f
         name = getattr(f, "name", "") or ""
         if not name.lower().endswith(".pdf"):
             raise forms.ValidationError("Apenas ficheiros .pdf são aceites para a ata.")
